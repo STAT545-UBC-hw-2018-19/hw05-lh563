@@ -1,8 +1,11 @@
 ---
-title: "hw05-lh563"
+always_allow_html: yes
 author: "Lu Han"
 date: "10/18/2018"
-output: github_document
+output:
+
+  github_document: default
+title: "hw05-lh563"
 ---
 
 ### Part 1: Factor management
@@ -89,11 +92,9 @@ The use of "ggplotly" helps the readers to read value of each data point directl
 ### Part 4: Writing figures to file
 Save image using ggsave
 ```{r}
-p
+p<-ggplot(gapminder, aes(gdpPercap, lifeExp)) +
+    geom_point(aes(colour=continent), alpha=0.2)
 ggsave(filename ="Figure 1. Relationship between gdpPercap and LifeExp",plot=p,device = png,width = 40, height = 40, units = "cm")
 ```
-Embed the plot into the document
-```{r}
-![Heres the figure I created above](Figure 1. Relationship between gdpPercap and LifeExp.png)
-```
+
 
