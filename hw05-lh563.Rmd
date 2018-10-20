@@ -5,3 +5,95 @@ date: "10/18/2018"
 output: github_document
 ---
 
+### Part 1: Factor management
+```{r}
+
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(forcats))
+suppressPackageStartupMessages(library(gapminder))
+
+```
+
+## Drop Oceania
+First, let's check what the dataframe looks like before and after the drop of Oceania.
+```{r}
+gap_drop<-gapminder %>% 
+  filter(continent!="Oceania") %>% 
+  droplevels() %>% 
+  str()
+
+```
+```{r}
+gapminder %>% str()
+```
+
+As we can see from the data, the continent now only have 4 factors instead of 5 in the original gapminder dataframe, also the observations reduced from 1704 in original dataframe to 1680. Because the "Oceania" level was dropped.
+We can double check with the "levels" function.
+```{r}
+gap_drop$continent %>% 
+  levels()
+```
+
+## Reorder the levels of countries
+```{r}
+
+gap_americas_1952 <- gapminder %>% 
+  filter(year==1952,continent=="Americas")
+
+ggplot(gap_americas_1952,aes(lifeExp,country)) +
+  geom_point()+
+  ggtitle("Original graph of lifeExp in America in 1993")
+  
+```
+Order the data by the value of lifeExp.
+```{r}
+gap_americas_1952 %>% 
+  mutate(country=fct_reorder(country, lifeExp)) %>% 
+  ggplot(aes(lifeExp, country)) + geom_point()
+```
+
+Order the data by the countries.
+```{r}
+gap_americas_1952 %>% 
+  mutate(lifeExp=fct_reorder(country,lifeExp)) %>% 
+  ggplot(aes(lifeExp, country)) + geom_point()
+```
+### Part 2: File I/O
+Experiment with one or more of write_csv()/read_csv() (and/or TSV friends), saveRDS()/readRDS(), dput()/dget()
+```{r}
+mean_lifeExp_americas_1952 <- gap_americas_1952 %>% 
+  group_by(country) %>% 
+  summarise(mean=mean(lifeExp))
+write_csv(mean_lifeExp_americas_1952,"mean of lifeExp in America in 1952")
+  
+```
+
+### Part 3: Visualization design
+```{r}
+#Use ggplot:
+suppressPackageStartupMessages(require(plotly))
+
+p<-ggplot(gapminder, aes(gdpPercap, lifeExp)) +
+    geom_point(aes(colour=continent), alpha=0.2)
+p+scale_x_log10() 
+
+
+```
+```{r}
+#Use ggplotly
+ggplotly(p+scale_x_log10())
+```
+The use of "ggplotly" helps the readers to read value of each data point directly from the plot, which is very helpful to quicly help the reader identify some specific points in a bunch of data.
+
+
+### Part 4: Writing figures to file
+Save image using ggsave
+```{r}
+p
+ggsave(filename ="Figure 1. Relationship between gdpPercap and LifeExp",device = png,width = 40, height = 40, units = "cm")
+```
+Embed the plot into the document
+```{r}
+![Heres the figure I created above](Figure 1. Relationship between gdpPercap and LifeExp.png)
+```
+
