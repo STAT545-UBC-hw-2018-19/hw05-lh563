@@ -90,7 +90,7 @@ The use of "ggplotly" helps the readers to read value of each data point directl
 Save image using ggsave
 ```{r}
 p
-ggsave(filename ="Figure 1. Relationship between gdpPercap and LifeExp",device = png,width = 40, height = 40, units = "cm")
+ggsave(filename ="Figure 1. Relationship between gdpPercap and LifeExp",plot=p,device = png,width = 40, height = 40, units = "cm")
 ```
 Embed the plot into the document
 ```{r}
